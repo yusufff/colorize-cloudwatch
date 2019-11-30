@@ -10,10 +10,15 @@ const WarningColor = "#FFCC80",
   ErrorColor = "#EF9A9A";
 
 colorize = () => {
-  const logMessages = document.querySelectorAll(
+  const iframe = document.getElementById("microConsole-Logs");
+  if (!iframe) return false;
+  const innerDocument = iframe.contentDocument
+    ? iframe.contentDocument
+    : iframe.contentWindow;
+  if (!innerDocument) return false;
+  const logMessages = innerDocument.querySelectorAll(
     ".awsui-table-row:not(.colored)"
   );
-
   if (logMessages.length === 0) return false;
 
   logMessages.forEach(log => {
