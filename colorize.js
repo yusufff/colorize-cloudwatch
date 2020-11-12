@@ -7,13 +7,13 @@
 const WarningBgColor = "#FFFF80",
   InfoBgColor = "#EAFAEA",
   DebugBgColor = "#FFFFFF",
-  ErrorBgColor = "#FF0000",
+  ErrorBgColor = "#FFB3B3",
   TraceBgColor = "#FFFFFF",
   DefaultBgColor = "#FFFFFF",
   WarningColor = "#000000",
   InfoColor = "#000000",
   DebugColor = "#4DC3FF",
-  ErrorColor = "#FFFFFF",
+  ErrorColor = "#000000",
   TraceColor = "#AAAAAA",
   DefaultColor = "#000000";
 
@@ -42,10 +42,20 @@ function colorizeLogGroup(innerDocument) {
           log.classList.add("colored");
           log.style.color = result.color;
           log.style.backgroundColor = result.bgColor;
+
           const cells = log.querySelectorAll("td");
-          cells.forEach(cell => {
-              cell.style.borderBottom = "1px solid #AAAAAA";
-          });
+          if (cells.length > 0) {
+              cells.forEach(cell => {
+                  cell.style.borderBottom = "1px solid #AAAAAA";
+              });
+          }
+
+          const details = log.querySelectorAll(".logs__log-events-table__content");
+          if (details.length > 0) {
+              details.forEach(detail => {
+                  detail.innerHTML = detail.innerHTML.replaceAll('@@', '<br/>');
+              });
+          }
         }
     });
 }
@@ -59,14 +69,31 @@ function colorizeLogInsights(innerDocument) {
         if (logMessageText) {
           let result = getColorsByLogLevel(logMessageText)
 
-          const cells = log.querySelectorAll(".logs-table__body-cell");
-          cells.forEach(cell => {
-            cell.style.color = result.color;
-            cell.style.backgroundColor = result.bgColor;
-          });
+          // colorize background and text color of row
           log.style.color = result.color;
           log.style.backgroundColor = result.bgColor;
           log.style.borderBottom = "1px solid #AAAAAA";
+
+          // colorize cells of the summary row
+          const cells = log.querySelectorAll(".logs-table__body-cell");
+          if (cells.length > 0) {
+            cells.forEach(cell => {
+              cell.style.color = result.color;
+              cell.style.backgroundColor = result.bgColor;
+            });
+          }
+
+          // colorize and format (insert line breaks for @@ tokens) in log details table
+          const details = log.querySelectorAll(".logs-insights-expanded-row table");
+          if (details.length > 0) {
+            details.forEach(detail => {
+                detail.innerHTML = detail.innerHTML.replaceAll('@@', '<br/>');
+                detail.style.color = result.color;
+                detail.style.backgroundColor = result.bgColor;
+                detail.style.width = "95%";
+                detail.style.whiteSpace = "initial";
+            });
+          }
         }
     });
 }
