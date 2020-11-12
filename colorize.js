@@ -7,13 +7,13 @@
 const WarningBgColor = "#FFFF80",
   InfoBgColor = "#EAFAEA",
   DebugBgColor = "#FFFFFF",
-  ErrorBgColor = "#FF0000",
+  ErrorBgColor = "#FFB3B3",
   TraceBgColor = "#FFFFFF",
   DefaultBgColor = "#FFFFFF",
   WarningColor = "#000000",
   InfoColor = "#000000",
   DebugColor = "#4DC3FF",
-  ErrorColor = "#FFFFFF",
+  ErrorColor = "#000000",
   TraceColor = "#AAAAAA",
   DefaultColor = "#000000";
 
@@ -42,10 +42,20 @@ function colorizeLogGroup(innerDocument) {
           log.classList.add("colored");
           log.style.color = result.color;
           log.style.backgroundColor = result.bgColor;
+
           const cells = log.querySelectorAll("td");
-          cells.forEach(cell => {
-              cell.style.borderBottom = "1px solid #AAAAAA";
-          });
+          if (cells.length > 0) {
+              cells.forEach(cell => {
+                  cell.style.borderBottom = "1px solid #AAAAAA";
+              });
+          }
+
+          const details = log.querySelectorAll(".logs__log-events-table__content");
+          if (details.length > 0) {
+              details.forEach(detail => {
+                  detail.innerHTML = detail.innerHTML.replaceAll('@@', '<br/>');
+              });
+          }
         }
     });
 }
