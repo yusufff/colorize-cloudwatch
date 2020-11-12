@@ -4,4 +4,4 @@ Easily read Amazon Cloud Services CloudWatch logs with error, warning, info and 
 
 It doesn't collect any user data and it is free to use.
 
-Contributions are welcome: https://github.com/yusufff/colorize-cloudwatch
+Install now! https://chrome.google.com/webstore/detail/colorize-cloudwatch/jhldmkcnoaemijffmelcbjpkbpghegeh
