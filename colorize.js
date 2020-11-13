@@ -14,8 +14,10 @@ const WarningBgColor = "#FFFF80",
   InfoColor = "#000000",
   DebugColor = "#4DC3FF",
   ErrorColor = "#000000",
-  TraceColor = "#AAAAAA",
+  TraceColor = "#888888",
   DefaultColor = "#000000";
+
+const linebreakPattern = "@@"
 
 colorize = () => {
   const iframe = document.getElementById("microConsole-Logs");
@@ -39,7 +41,6 @@ function colorizeLogGroup(innerDocument) {
         if (logMessageText) {
           let result = getColorsByLogLevel(logMessageText)
 
-          log.classList.add("colored");
           log.style.color = result.color;
           log.style.backgroundColor = result.bgColor;
 
@@ -50,10 +51,11 @@ function colorizeLogGroup(innerDocument) {
               });
           }
 
-          const details = log.querySelectorAll(".logs__log-events-table__content");
+          const details = log.querySelectorAll(".logs__log-events-table__content:not(.formatted)");
           if (details.length > 0) {
               details.forEach(detail => {
-                  detail.innerHTML = detail.innerHTML.replaceAll('@@', '<br/>');
+                  detail.innerHTML = detail.innerHTML.replaceAll(linebreakPattern, '<br/>');
+                  detail.classList.add("formatted");
               });
           }
         }
@@ -84,14 +86,15 @@ function colorizeLogInsights(innerDocument) {
           }
 
           // colorize and format (insert line breaks for @@ tokens) in log details table
-          const details = log.querySelectorAll(".logs-insights-expanded-row table");
+          const details = log.querySelectorAll(".logs-insights-expanded-row table:not(.formatted)");
           if (details.length > 0) {
             details.forEach(detail => {
-                detail.innerHTML = detail.innerHTML.replaceAll('@@', '<br/>');
+                detail.innerHTML = detail.innerHTML.replaceAll(linebreakPattern, '<br/>');
                 detail.style.color = result.color;
                 detail.style.backgroundColor = result.bgColor;
                 detail.style.width = "95%";
                 detail.style.whiteSpace = "initial";
+                detail.classList.add("formatted");
             });
           }
         }
@@ -109,6 +112,9 @@ function getColorsByLogLevel(logMessageText) {
   } else if (logMessageText.indexOf("ERROR") !== -1) {
     result.color = ErrorColor;
     result.bgColor = ErrorBgColor;
+  } else if (logMessageText.indexOf("FATAL") !== -1) {
+      result.color = ErrorColor;
+      result.bgColor = ErrorBgColor;
   } else if (logMessageText.indexOf("DEBUG") !== -1) {
     result.color = DebugColor;
     result.bgColor = DebugBgColor;
