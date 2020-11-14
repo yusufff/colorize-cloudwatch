@@ -4,33 +4,38 @@
  * http://github.com/yusufff
  */
 
-const WarningBgColor = "#FFFF80",
-  InfoBgColor = "#EAFAEA",
-  DebugBgColor = "#FFFFFF",
-  ErrorBgColor = "#FFB3B3",
-  TraceBgColor = "#FFFFFF",
-  DefaultBgColor = "#FFFFFF",
-  WarningColor = "#000000",
-  InfoColor = "#000000",
-  DebugColor = "#4DC3FF",
-  ErrorColor = "#000000",
-  TraceColor = "#888888",
-  DefaultColor = "#000000";
+function loadSettings() {
+    chrome.storage.sync.get({
+      settings: settings
+    }, function(items) { settings = items.settings; });
+}
 
-const linebreakPattern = "@@"
-
-colorize = () => {
-  const iframe = document.getElementById("microConsole-Logs");
-  if (!iframe) return false;
-  const innerDocument = iframe.contentDocument
-    ? iframe.contentDocument
-    : iframe.contentWindow;
-  if (!innerDocument) return false;
-
-  colorizeLogGroup(innerDocument);
-  colorizeLogInsights(innerDocument);
-
-};
+function getColorsByLogLevel(logMessageText) {
+  var result = {}
+  if (logMessageText.indexOf("INFO") !== -1) {
+    result.color = settings.InfoColor;
+    result.bgColor = settings.InfoBgColor;
+  } else if (logMessageText.indexOf("WARN") !== -1) {
+    result.color = settings.WarningColor;
+    result.bgColor = settings.WarningBgColor;
+  } else if (logMessageText.indexOf("ERROR") !== -1) {
+    result.color = settings.ErrorColor;
+    result.bgColor = settings.ErrorBgColor;
+  } else if (logMessageText.indexOf("FATAL") !== -1) {
+      result.color = settings.ErrorColor;
+      result.bgColor = settings.ErrorBgColor;
+  } else if (logMessageText.indexOf("DEBUG") !== -1) {
+    result.color = settings.DebugColor;
+    result.bgColor = settings.DebugBgColor;
+  } else if (logMessageText.indexOf("TRACE") !== -1) {
+    result.color = settings.TraceColor;
+    result.bgColor = settings.TraceBgColor;
+  } else {
+    result.color = settings.DefaultColor;
+    result.bgColor = settings.DefaultBgColor;
+  }
+  return result;
+}
 
 function colorizeLogGroup(innerDocument) {
     const logMessages = innerDocument.querySelectorAll(".awsui-table-row");
@@ -54,7 +59,9 @@ function colorizeLogGroup(innerDocument) {
           const details = log.querySelectorAll(".logs__log-events-table__content:not(.formatted)");
           if (details.length > 0) {
               details.forEach(detail => {
-                  detail.innerHTML = detail.innerHTML.replaceAll(linebreakPattern, '<br/>');
+                  if (settings.LineBreakReplacementEnabled) {
+                     detail.innerHTML = detail.innerHTML.replaceAll(settings.LineBreakReplacementToken, '<br/>');
+                  }
                   detail.classList.add("formatted");
               });
           }
@@ -89,7 +96,9 @@ function colorizeLogInsights(innerDocument) {
           const details = log.querySelectorAll(".logs-insights-expanded-row table:not(.formatted)");
           if (details.length > 0) {
             details.forEach(detail => {
-                detail.innerHTML = detail.innerHTML.replaceAll(linebreakPattern, '<br/>');
+                if (settings.LineBreakReplacementEnabled) {
+                    detail.innerHTML = detail.innerHTML.replaceAll(settings.LineBreakReplacementToken, '<br/>');
+                }
                 detail.style.color = result.color;
                 detail.style.backgroundColor = result.bgColor;
                 detail.style.width = "95%";
@@ -101,33 +110,20 @@ function colorizeLogInsights(innerDocument) {
     });
 }
 
-function getColorsByLogLevel(logMessageText) {
-  var result = {}
-  if (logMessageText.indexOf("INFO") !== -1) {
-    result.color = InfoColor;
-    result.bgColor = InfoBgColor;
-  } else if (logMessageText.indexOf("WARN") !== -1) {
-    result.color = WarningColor;
-    result.bgColor = WarningBgColor;
-  } else if (logMessageText.indexOf("ERROR") !== -1) {
-    result.color = ErrorColor;
-    result.bgColor = ErrorBgColor;
-  } else if (logMessageText.indexOf("FATAL") !== -1) {
-      result.color = ErrorColor;
-      result.bgColor = ErrorBgColor;
-  } else if (logMessageText.indexOf("DEBUG") !== -1) {
-    result.color = DebugColor;
-    result.bgColor = DebugBgColor;
-  } else if (logMessageText.indexOf("TRACE") !== -1) {
-    result.color = TraceColor;
-    result.bgColor = TraceBgColor;
-  } else {
-    result.color = DefaultColor;
-    result.bgColor = DefaultBgColor;
-  }
-  return result;
-}
+colorize = () => {
+  const iframe = document.getElementById("microConsole-Logs");
+  if (!iframe) return false;
+  const innerDocument = iframe.contentDocument
+    ? iframe.contentDocument
+    : iframe.contentWindow;
+  if (!innerDocument) return false;
+
+  colorizeLogGroup(innerDocument);
+  colorizeLogInsights(innerDocument);
+
+};
 
 const colorizeInterval = setInterval(() => {
+  loadSettings();
   window.requestAnimationFrame(colorize);
 }, 1000);
