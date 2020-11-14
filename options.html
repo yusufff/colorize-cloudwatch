@@ -31,6 +31,12 @@
             margin-top: 6px;
         }
 
+        .code {
+            font-family: monospace;
+            color: #E84545;
+            border: 1px solid #AAAAAA;
+        }
+
         #status {
             padding-top: 5px;
             min-height: 2em;
@@ -265,7 +271,7 @@
                     <label>Preview:</label><br/>
                 </td></tr>
                 <tr><td>
-                    <span id="DefaultPreview" class="preview" style="color: #000000; background-color: #FFFFFF">text...</span>
+                    <span id="DefaultPreview" class="preview" style="color: #000000; background-color: #FFFFFF">default</span>
                 </td></tr>
             </table>
         </div>
@@ -275,13 +281,13 @@
 <fieldset class="configArea">
     <legend>Line breaks:</legend>
     <p>
-        Sometimes it is required to replace line breaks with a token (e. g. '@@') before they are written to the log output.
-        In CloudWatch logs these tokens can be turned into proper HTML line breaks by means of this Chrome Extension again.
+        Sometimes it is required to replace line breaks with a token (e. g. <span class="code">@@</span>) before they
+        are written to the log output. By means of this setting, these tokens can be turned into HTML line breaks
+        (i. e. <span class="code">&lt;br/&gt;</span> tags) in CloudWatch Logs again.
     </p>
     <div>
         <input type="checkbox" id="LineBreakReplacementEnabled" name="LineBreakReplacementEnabled" checked="checked" />
-        <label for="LineBreakReplacementEnabled" style="margin-left: 3px;">Enable replacement of token</label><br/>
-        <label for="LineBreakReplacementToken">Token:</label>
+        <label for="LineBreakReplacementEnabled" style="margin-left: 3px;">Token to be replaced:</label>
         <input type="text" id="LineBreakReplacementToken" name="LineBreakReplacementToken" value="@@" />
     </div>
 </fieldset>
