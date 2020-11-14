@@ -14,6 +14,9 @@
             background-color: #FFFFFF;
             float: left;
         }
+        fieldset.colorChooser {
+            width: 45%
+        }
 
         div.left {
             float: left;
@@ -36,16 +39,35 @@
         #save, #reset {
             font-size: small;
         }
+
+        .configArea {
+            background-color: #ECEAEB;
+            float:left;
+        }
+
+        #buttonArea {
+            float: right;
+            padding: 5px;
+        }
+
+        body {
+            min-width: 720px
+        }
+
+        #rootContainer {
+            width: 720px
+        }
     </style>
 </head>
-<body style="min-width: 670px">
+<body>
 
-<fieldset style="background-color: #ECEAEB;float:left">
+<div id="rootContainer">
+<fieldset class="configArea">
     <legend>Colors:</legend>
     <p>
 
     </p>
-    <fieldset>
+    <fieldset class="colorChooser">
         <legend>Error / Fatal Messages:</legend>
         <div class="left">
             <table>
@@ -79,7 +101,7 @@
         </div>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="colorChooser">
         <legend>Warning Messages:</legend>
         <div class="left">
             <table>
@@ -113,7 +135,7 @@
         </div>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="colorChooser">
         <legend>Info Messages:</legend>
         <div class="left">
             <table>
@@ -147,7 +169,7 @@
         </div>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="colorChooser">
         <legend>Debug Messages:</legend>
         <div class="left">
             <table>
@@ -181,7 +203,7 @@
         </div>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="colorChooser">
         <legend>Trace Messages:</legend>
         <div class="left">
             <table>
@@ -215,7 +237,7 @@
         </div>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="colorChooser">
         <legend>Default:</legend>
         <div class="left">
             <table>
@@ -250,7 +272,7 @@
     </fieldset>
 </fieldset>
 
-<fieldset style="background-color: #ECEAEB;float:right">
+<fieldset class="configArea">
     <legend>Line breaks:</legend>
     <p>
         Sometimes it is required to replace line breaks with a token (e. g. '@@') before they are written to the log output.
@@ -265,9 +287,10 @@
 </fieldset>
 
 <div id="status" class="left"></div>
-<div style="float: right;padding-bottom: 5px; padding-top: 5px">
-    <button id="reset">Reset to Default</button>
+<div id="buttonArea">
+    <button id="reset">Reset to default</button>
     <button id="save">Save</button>
+</div>
 </div>
 
 <script src="settings.js"></script>

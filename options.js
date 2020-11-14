@@ -43,9 +43,11 @@ tokenCheckbox.addEventListener('change', function() { token.disabled = !this.che
 // Restores options using the preferences stored in chrome.storage.
 document
     .addEventListener('DOMContentLoaded', function () {
-        chrome.storage.sync.get({
-          settings: settings
-        }, function(items) { applySettings(items.settings); });
+        if (chrome.storage) {
+            chrome.storage.sync.get({
+              settings: settings
+            }, function(items) { applySettings(items.settings); });
+        }
     });
 
 // Saves options to chrome.storage
@@ -58,12 +60,14 @@ document
         settings[tokenCheckbox.id] = tokenCheckbox.checked;
         settings[token.id] = token.value;
 
-        chrome.storage.sync.set({
-            settings: settings
-        }, function() {
-            // Update status to let user know options were saved.
-            reportStatus("Options saved.");
-        });
+        if (chrome.storage) {
+            chrome.storage.sync.set({
+                settings: settings
+            }, function() {
+                // Update status to let user know options were saved.
+                reportStatus("Options saved.");
+            });
+        }
     });
 
 // Saves options to chrome.storage
