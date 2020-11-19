@@ -18,7 +18,15 @@
 			"https://*.console.aws.amazon.com/cloudwatch/*"
 		],
 		"js": [
+			"settings.js",
 			"colorize.js"
 		]
-	}]
+	}],
+	"permissions": [
+		"storage"
+	],
+	"options_ui": {
+		"page": "options.html",
+		"open_in_tab": false
+	}
 }
